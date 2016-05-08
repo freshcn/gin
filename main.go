@@ -94,7 +94,7 @@ func MainAction(c *cli.Context) {
 	// Bootstrap the environment
 	envy.Bootstrap()
 
-	if appPort != "3001" {
+	if appPort != "3001" || c.GlobalBool("proxy") {
 		// Set the PORT env
 		os.Setenv("PORT", appPort)
 	}
