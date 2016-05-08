@@ -58,6 +58,10 @@ func main() {
 			Name:  "godep,g",
 			Usage: "use godep when building",
 		},
+		cli.BoolFlag{
+			Name:  "proxy,P",
+			Usage: "run proxy",
+		},
 	}
 	app.Commands = []cli.Command{
 		{
@@ -96,19 +100,23 @@ func MainAction(c *cli.Context) {
 	builder := gin.NewBuilder(c.GlobalString("path"), c.GlobalString("bin"), c.GlobalBool("godep"))
 	runner := gin.NewRunner(filepath.Join(wd, builder.Binary()), c.Args()...)
 	runner.SetWriter(os.Stdout)
-	proxy := gin.NewProxy(builder, runner)
+	if c.GlobalBool("proxy") {
 
-	config := &gin.Config{
-		Port:    port,
-		ProxyTo: "http://localhost:" + appPort,
+		proxy := gin.NewProxy(builder, runner)
+
+		config := &gin.Config{
+			Port:    port,
+			ProxyTo: "http://localhost:" + appPort,
+		}
+
+		err = proxy.Run(config)
+		if err != nil {
+			logger.Fatal(err)
+		}
+		logger.Printf("listening on port %d\n", port)
+	} else {
+		immediate = true
 	}
-
-	err = proxy.Run(config)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	logger.Printf("listening on port %d\n", port)
 
 	shutdown(runner)
 
