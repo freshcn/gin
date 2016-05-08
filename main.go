@@ -86,11 +86,18 @@ func MainAction(c *cli.Context) {
 	appPort := strconv.Itoa(c.GlobalInt("appPort"))
 	immediate = c.GlobalBool("immediate")
 
+	if appPort == "3001" {
+		// Set the PORT env
+		os.Setenv("PORT", appPort)
+	}
+
 	// Bootstrap the environment
 	envy.Bootstrap()
 
-	// Set the PORT env
-	os.Setenv("PORT", appPort)
+	if appPort != "3001" {
+		// Set the PORT env
+		os.Setenv("PORT", appPort)
+	}
 
 	wd, err := os.Getwd()
 	if err != nil {
