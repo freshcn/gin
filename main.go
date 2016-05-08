@@ -3,12 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/codegangsta/cli"
 	"github.com/codegangsta/envy/lib"
 	"github.com/codegangsta/gin/lib"
 
-	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -19,7 +19,7 @@ import (
 
 var (
 	startTime  = time.Now()
-	logger     = log.New(os.Stdout, "[gin] ", 0)
+	logger     = log.New(os.Stdout, "[\033[32mgin\033[0m] ", 0)
 	immediate  = false
 	buildError error
 )
@@ -151,6 +151,7 @@ func EnvAction(c *cli.Context) {
 }
 
 func build(builder gin.Builder, runner gin.Runner, logger *log.Logger) {
+	logger.Println("Building ...")
 	err := builder.Build()
 	if err != nil {
 		buildError = err
@@ -162,7 +163,9 @@ func build(builder gin.Builder, runner gin.Runner, logger *log.Logger) {
 			logger.Println("Build Successful")
 		}
 		buildError = nil
+		logger.Println("Build completed.")
 		if immediate {
+			logger.Println("Running ...")
 			runner.Run()
 		}
 	}
