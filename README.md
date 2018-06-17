@@ -1,38 +1,23 @@
-gin [![wercker status](https://app.wercker.com/status/f413ccbd85cfc4a58a37f03dd7aaa87e "wercker status")](https://app.wercker.com/project/bykey/f413ccbd85cfc4a58a37f03dd7aaa87e)
-========
+该项目是在 https://github.com/codegangsta/gin 的基础之上做的一些修改。目的是在开发环境的时候，可以实现监听项目目录里面的go代码的变化，并自动重新编译文件，并运行它。以达到测试环境按保存的代码自动编译文件的效果。
 
-`gin` is a simple command line utility for live-reloading Go web applications. 
-Just run `gin` in your app directory and your web app will be served with 
-`gin` as a proxy. `gin` will automatically recompile your code when it 
-detects a change. Your app will be restarted the next time it receives an 
-HTTP request.
-
-`gin` adheres to the "silence is golden" principle, so it will only complain 
-if there was a compiler error or if you succesfully compile after an error.
-
-## Installation
-
-Assuming you have a working Go environment and `GOPATH/bin` is in your 
-`PATH`, `gin` is a breeze to install:
+# 安装
 
 ```shell
-go get github.com/codegangsta/gin
+go get -u -v github.com/freshcn/gin
 ```
 
-Then verify that `gin` was installed correctly:
+# 使用
 
-```shell
-gin -h
+安装了后，默认情况下，你只需要在go项目的根目录运行gin命令就会自动监听你的项目的变化，并自动编译文件了。
+
+默认会生成文件名为`gin-bin`的可执行文件在你的项目的根目录，建议你将这个文件添加到你的`.gitignore`文件里面。
+
+# 高级使用
+
+在项目的根目录使用创建一个文件`.env`在里面可以按ini格式来配置项目运行时的环境变量。如：
+
+```ini
+DEBUG=true
+PORT=8888
 ```
 
-## Supporting Gin in Your Web app
-`gin` assumes that your web app binds itself to the `PORT` environment 
-variable so it can properly proxy requests to your app. Web frameworks 
-like [Martini](http://github.com/codegangsta/martini) do this out of 
-the box.
-
-## Using flags?
-When you normally start your server with [flags](https://godoc.org/flag)
-if you want to override any of them when running `gin` we suggest you 
-instead use [github.com/namsral/flag](https://github.com/namsral/flag)
-as explained in [this post](http://stackoverflow.com/questions/24873883/organizing-environment-variables-golang/28160665#28160665)
